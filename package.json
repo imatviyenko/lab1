@@ -1,0 +1,17 @@
+{
+  "name": "lab1_",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "join-images": "^1.0.0",
+    "minimist": "^1.2.5",
+    "sharp": "^0.29.3"
+  }
+}
