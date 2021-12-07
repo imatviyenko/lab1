@@ -4,7 +4,7 @@ const { joinImages } = require('join-images');
 const logger = require('./logger');
 
 
-const getCatImage = async (message, width, height, color, size) => {
+const getCatImage = (message, width, height, color, size) => {
     const catassBaseUrl = 'https://cataas.com/cat/says';
 
     const opt = {
@@ -13,28 +13,27 @@ const getCatImage = async (message, width, height, color, size) => {
 
     try {
         const url = `${catassBaseUrl}/${message}?width=${width}&height=${height}&color=${color}&s=${size}`;
-        return await axios.get(url, opt);
+        return axios.get(url, opt);
     } catch(e) {
         logger.error(e);
     }
 }
 
-const joinCatImages = async (images, width, height) => {
-    if (!Array.isArray(images) || images.length === 0 || !Number.isInteger(width) || !Number.isInteger(height))  {
+const joinCatImages = (images) => {
+    if (!Array.isArray(images) || images.length === 0)  {
         logger.error('Invalid arguments passed to joinCatImages');
         return null;
     }
 
     const opt = {direction: 'horizontal'};
-    return await joinImages(images, opt).then( sharpImg => {
+    return joinImages(images, opt).then( sharpImg => {
         return sharpImg.jpeg({ mozjpeg: true }).toBuffer();
     });
 }
 
-const saveImageToFile = async (fileName, data) => {
-
+const saveImageToFile = (fileName, data) => {
     try {
-        return await fsPromises.writeFile(fileName, data, 'binary');
+        return fsPromises.writeFile(fileName, data, 'binary');
     } catch (e) {
         logger.error(e);
     }

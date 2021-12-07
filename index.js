@@ -12,25 +12,17 @@ const {
     size = 100, 
 } = argv; 
 
-
 async function main() {
     logger.info('Program started');
-    let image1Response, image2Response;
 
     try {
-        const image1Promise = catService.getCatImage(greeting, width, height, color, size).then(response => {
-            image1Response = response;
-        });
+        const messages = [greeting, who];
+        const promises = messages.map( m => catService.getCatImage(m, width, height, color, size).then( r => r.data));
+        const images = await Promise.all(promises);
+        logger.info(`image1 data length: ${images[0].length}`);
+        logger.info(`image2 data length: ${images[1].length}`);
 
-        const image2Promise = catService.getCatImage(who, width, height, color, size).then(response => {
-            image2Response = response;
-        });
-
-        await Promise.all([image1Promise, image2Promise]);
-        logger.info(`image1Response data length: ${image1Response.data.length}`);
-        logger.info(`image2Response data length: ${image2Response.data.length}`);
-
-        const mergedImageData = await catService.joinCatImages([image1Response.data, image2Response.data], width, height);
+        const mergedImageData = await catService.joinCatImages(images);
         logger.info('Images merged');
         
         const fileOut = join(process.cwd(), `/cat-card.jpg`);
@@ -42,7 +34,6 @@ async function main() {
    
     logger.info('Program completed');
 }
-
 
 // Program entry point
 main();
